@@ -13,11 +13,14 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
     public init(entityName: String,
                 keyForSort: String,
                 predicate: NSPredicate? = nil,
-                sectionKey: String) {
+                sectionKey: String? = nil) {
         let fetchRequest = NSFetchRequest<DBModel>(entityName: entityName)
         let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
-        let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor, sectionSortDescriptor]
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        if let sectionKey = sectionKey {
+            let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
+            fetchRequest.sortDescriptors?.append(sectionSortDescriptor)
+        }
         fetchRequest.predicate = predicate
         
         fetchResultController = NSFetchedResultsController<DBModel>(
@@ -75,12 +78,12 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         changeCallback?(change)
     }
     
-    func getItem(at indexPath: IndexPath) -> ViewModel {
+    public func getItem(at indexPath: IndexPath) -> ViewModel {
         let item = fetchResultController.object(at: indexPath)
         return ViewModel(model: item)
     }
     
-    func numberOfItems(in section: Int) -> Int {
+    public func numberOfItems(in section: Int) -> Int {
         if let sections = fetchResultController.sections {
             return sections[section].numberOfObjects
         } else {
@@ -88,7 +91,7 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         }
     }
     
-    func numberOfSections() -> Int {
+    public func numberOfSections() -> Int {
         if let sections = fetchResultController.sections?.count {
             return sections
         } else {
@@ -96,34 +99,39 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         }
     }
     
-    func priorityForSectionIndex(for section: Int) -> String? {
+    public func priorityForSectionIndex(for section: Int) -> String? {
         return fetchResultController.sections?[section].name
     }
 }
 
 extension CoreDataController where DBModel: NSManagedObject {
-    func add(model: DBModel) {
+    public func add(model: DBModel) {
         CoreDataStack.instance.context.insert(model)
         CoreDataStack.instance.saveContext()
     }
     
-    func deleteItems(at indexPaths: [IndexPath]) {
+    public func deleteItems(at indexPaths: [IndexPath]) {
         indexPaths
             .map(fetchResultController.object)
             .forEach(CoreDataStack.instance.context.delete)
         CoreDataStack.instance.saveContext()
     }
     
-    func updateModel(indexPath: IndexPath, update: (DBModel) -> Void) {
+    public func updateModel(indexPath: IndexPath, update: (DBModel) -> Void) {
         let item = fetchResultController.object(at: indexPath)
         update(item)
         CoreDataStack.instance.saveContext()
+    }
+    
+    public func getItemID(at indexPath: IndexPath) -> NSManagedObjectID {
+        let item = fetchResultController.object(at: indexPath)
+        return item.objectID
     }
 }
 
 extension CoreDataController {
     public struct Change {
-        let type: ChangeType
+        public let type: ChangeType
     }
 }
 

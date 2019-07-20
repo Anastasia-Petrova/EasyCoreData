@@ -1,10 +1,11 @@
 import CoreData
 import Foundation
+import CoreFoundation
 
 public class CoreDataStack {
     // Singleton
     public static let instance = CoreDataStack()
-    
+    private let bundleName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
     private init() {}
     
     public lazy var context: NSManagedObjectContext = self.createContext()
@@ -21,6 +22,26 @@ public class CoreDataStack {
         }
     }
     
+    public func fetchedResultsController<T: NSManagedObject>(
+        entityName: String,
+        keyForSort: String,
+        sectionKey: String? = nil,
+        predicate: NSPredicate? = nil
+        ) -> NSFetchedResultsController<T> {
+        
+        let fetchRequest = NSFetchRequest<T>(entityName: entityName)
+        let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        if let sectionKey = sectionKey {
+            let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
+            fetchRequest.sortDescriptors?.append(sectionSortDescriptor)
+        }
+        fetchRequest.predicate = predicate
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.instance.context, sectionNameKeyPath: sectionKey, cacheName: nil)
+        
+        return fetchedResultsController
+    }
     // Entity for Name
     public func entityForName(entityName: String) -> NSEntityDescription {
         return NSEntityDescription.entity(forEntityName: entityName, in: self.context)!
@@ -34,13 +55,13 @@ public class CoreDataStack {
     }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
-        let modelURL = Bundle.main.url(forResource: "TodoList", withExtension: "momd")!
+        let modelURL = Bundle.main.url(forResource: bundleName, withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.appendingPathComponent("TodoListData")
+        let url = self.applicationDocumentsDirectory.appendingPathComponent(bundleName + "Data")
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
             try coordinator.addPersistentStore(ofType: NSSQLiteStoreType,
