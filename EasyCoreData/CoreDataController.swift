@@ -16,13 +16,14 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
                 sectionKey: String? = nil) {
         let fetchRequest = NSFetchRequest<DBModel>(entityName: entityName)
         let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        var sortDescriptors: [NSSortDescriptor] = []
         if let sectionKey = sectionKey {
             let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
-            fetchRequest.sortDescriptors?.append(sectionSortDescriptor)
+            sortDescriptors.append(sectionSortDescriptor)
         }
+        sortDescriptors.append(sortDescriptor)
+        fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate
-        
         fetchResultController = NSFetchedResultsController<DBModel>(
             fetchRequest: fetchRequest,
             managedObjectContext: CoreDataStack.instance.context,
@@ -85,7 +86,7 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         var sectionChangeType: Change.SectionChangeType = .error("CoreData has fucked up!")
         switch type {
         case .insert:
-                sectionChangeType = .insert(sectionIndex)
+            sectionChangeType = .insert(sectionIndex)
         case .delete:
             sectionChangeType = .delete(sectionIndex)
         default: break
@@ -107,7 +108,7 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         return fetchResultController.sections?.count ?? 0
     }
     
-    public func priorityForSection(at index: Int) -> String? {
+    public func nameForSection(at index: Int) -> String? {
         return section(at: index)?.name
     }
     
