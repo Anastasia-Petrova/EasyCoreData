@@ -84,23 +84,23 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
     }
     
     public func numberOfItems(in section: Int) -> Int {
-        if let sections = fetchResultController.sections {
-            return sections[section].numberOfObjects
-        } else {
-            return 0
-        }
+        return self.section(at: section)?.numberOfObjects ?? 0
     }
     
     public func numberOfSections() -> Int {
-        if let sections = fetchResultController.sections?.count {
-            return sections
-        } else {
-            return 1
-        }
+        return fetchResultController.sections?.count ?? 0
     }
     
-    public func priorityForSectionIndex(for section: Int) -> String? {
-        return fetchResultController.sections?[section].name
+    public func priorityForSection(at index: Int) -> String? {
+        return section(at: index)?.name
+    }
+    
+    private func section(at index: Int) -> NSFetchedResultsSectionInfo? {
+        if let sections = fetchResultController.sections, index < sections.count {
+            return sections[index]
+        } else {
+            return nil
+        }
     }
 }
 
