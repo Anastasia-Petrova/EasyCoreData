@@ -53,28 +53,44 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
                            at indexPath: IndexPath?,
                            for type: NSFetchedResultsChangeType,
                            newIndexPath: IndexPath?) {
-        var changeType: Change.ChangeType = .error("CoreData has fucked up!")
+        var rowChangeType: Change.RowChangeType = .error("CoreData has fucked up!")
         
         switch type {
         case .insert:
             if let newIndexPath = newIndexPath {
-                changeType = .insert(newIndexPath)
+                rowChangeType = .insert(newIndexPath)
             }
         case .delete:
             if let indexPath = indexPath {
-                changeType = .delete(indexPath)
+                rowChangeType = .delete(indexPath)
             }
         case .update:
             if let indexPath = indexPath {
-                changeType = .update(indexPath)
+                rowChangeType = .update(indexPath)
             }
         case .move:
             if let fromIndexPath = indexPath, let toIndexPath = newIndexPath {
-                changeType = .move(fromIndexPath, toIndexPath)
+                rowChangeType = .move(fromIndexPath, toIndexPath)
             }
         default: break
         }
-        let change = Change(type: changeType)
+        let change = Change(type: .row(rowChangeType))
+        changeCallback?(change)
+    }
+    
+    public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                           didChange sectionInfo: NSFetchedResultsSectionInfo,
+                           atSectionIndex sectionIndex: Int,
+                           for type: NSFetchedResultsChangeType) {
+        var sectionChangeType: Change.SectionChangeType = .error("CoreData has fucked up!")
+        switch type {
+        case .insert:
+                sectionChangeType = .insert(sectionIndex)
+        case .delete:
+            sectionChangeType = .delete(sectionIndex)
+        default: break
+        }
+        let change = Change(type: .section(sectionChangeType))
         changeCallback?(change)
     }
     
@@ -137,10 +153,21 @@ extension CoreDataController {
 
 extension CoreDataController.Change {
     public enum ChangeType {
+        case row(RowChangeType)
+        case section(SectionChangeType)
+    }
+    
+    public enum RowChangeType {
         case insert(IndexPath)
         case delete(IndexPath)
         case move(IndexPath, IndexPath)
         case update(IndexPath)
+        case error(String)
+    }
+    
+    public enum SectionChangeType {
+        case insert(Int)
+        case delete(Int)
         case error(String)
     }
 }
