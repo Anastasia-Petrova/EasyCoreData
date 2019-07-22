@@ -108,6 +108,11 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         return fetchResultController.sections?.count ?? 0
     }
     
+    public func indexForSectionName(name: String) -> Int? {
+        let index =  fetchResultController.sections?.firstIndex(where: {$0.name == name})
+        return index
+    }
+    
     public func nameForSection(at index: Int) -> String? {
         return section(at: index)?.name
     }
