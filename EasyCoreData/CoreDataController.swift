@@ -139,9 +139,8 @@ extension CoreDataController where DBModel: NSManagedObject {
         CoreDataStack.instance.saveContext()
     }
     
-    public func updateModel(indexPath: IndexPath, update: (DBModel) -> Void) {
-        let item = fetchResultController.object(at: indexPath)
-        update(item)
+    public func updateModels(indexPaths: [IndexPath], update: ([DBModel]) -> Void) {
+        update(indexPaths.map(fetchResultController.object))
         CoreDataStack.instance.saveContext()
     }
     
