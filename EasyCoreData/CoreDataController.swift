@@ -134,13 +134,26 @@ extension CoreDataController where DBModel: NSManagedObject {
     
     public func deleteItems(at indexPaths: [IndexPath]) {
         indexPaths
-            .map(fetchResultController.object)
+            .compactMap { ip in
+                returnItem(at: ip)
+            }
             .forEach(CoreDataStack.instance.context.delete)
         CoreDataStack.instance.saveContext()
     }
     
+    public func returnItem(at indexPath: IndexPath) -> DBModel? {
+        guard indexPath.section < numberOfSections(),
+            indexPath.row < numberOfItems(in: indexPath.section) else  {
+                return nil
+        }
+        return fetchResultController.object(at: indexPath)
+    }
+    
     public func updateModels(indexPaths: [IndexPath], update: ([DBModel]) -> Void) {
-        update(indexPaths.map(fetchResultController.object))
+        let items: [DBModel] = indexPaths.compactMap { ip in
+            returnItem(at: ip)
+        }
+        update(items)
         CoreDataStack.instance.saveContext()
     }
     
