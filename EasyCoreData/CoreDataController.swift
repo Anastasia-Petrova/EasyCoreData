@@ -109,7 +109,7 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
     }
     
     public func indexForSectionName(name: String) -> Int? {
-        let index =  fetchResultController.sections?.firstIndex(where: {$0.name == name})
+        let index = fetchResultController.sections?.firstIndex(where: {$0.name == name})
         return index
     }
     
@@ -124,6 +124,14 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
             return nil
         }
     }
+    
+    public func getModel(at indexPath: IndexPath) -> DBModel? {
+        guard indexPath.section < numberOfSections(),
+            indexPath.row < numberOfItems(in: indexPath.section) else  {
+                return nil
+        }
+        return fetchResultController.object(at: indexPath)
+    }
 }
 
 extension CoreDataController where DBModel: NSManagedObject {
@@ -134,26 +142,13 @@ extension CoreDataController where DBModel: NSManagedObject {
     
     public func deleteItems(at indexPaths: [IndexPath]) {
         indexPaths
-            .compactMap { ip in
-                returnItem(at: ip)
-            }
+            .compactMap(getModel)
             .forEach(CoreDataStack.instance.context.delete)
         CoreDataStack.instance.saveContext()
     }
     
-    public func returnItem(at indexPath: IndexPath) -> DBModel? {
-        guard indexPath.section < numberOfSections(),
-            indexPath.row < numberOfItems(in: indexPath.section) else  {
-                return nil
-        }
-        return fetchResultController.object(at: indexPath)
-    }
-    
     public func updateModels(indexPaths: [IndexPath], update: ([DBModel]) -> Void) {
-        let items: [DBModel] = indexPaths.compactMap { ip in
-            returnItem(at: ip)
-        }
-        update(items)
+        update(indexPaths.compactMap(getModel))
         CoreDataStack.instance.saveContext()
     }
     
