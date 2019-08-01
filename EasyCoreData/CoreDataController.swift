@@ -152,9 +152,8 @@ extension CoreDataController where DBModel: NSManagedObject {
         CoreDataStack.instance.saveContext()
     }
     
-    public func getItemID(at indexPath: IndexPath) -> NSManagedObjectID {
-        let item = fetchResultController.object(at: indexPath)
-        return item.objectID
+    public func getItemID(at indexPath: IndexPath) -> NSManagedObjectID? {
+        return getModel(at: indexPath)?.objectID
     }
 }
 
