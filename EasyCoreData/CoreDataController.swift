@@ -9,11 +9,13 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
     public var beginUpdate: UpdateCallback?
     public var endUpdate: UpdateCallback?
     public var changeCallback: ChangeCallback?
+    private let entityName: String
     
     public init(entityName: String,
                 keyForSort: String,
                 predicate: NSPredicate? = nil,
                 sectionKey: String? = nil) {
+        self.entityName = entityName
         let fetchRequest = NSFetchRequest<DBModel>(entityName: entityName)
         let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
         var sortDescriptors: [NSSortDescriptor] = []
@@ -152,8 +154,24 @@ extension CoreDataController where DBModel: NSManagedObject {
         CoreDataStack.instance.saveContext()
     }
     
+    public func updateModels(urls: [URL], update: ([DBModel]) -> Void) {
+        update(getItems(urls: urls))
+        CoreDataStack.instance.saveContext()
+    }
+    
     public func getItemID(at indexPath: IndexPath) -> NSManagedObjectID? {
         return getModel(at: indexPath)?.objectID
+    }
+    
+    public func getItems(urls: [URL]) -> [DBModel] {
+        let context = fetchResultController.managedObjectContext
+        do {
+            return try urls
+                .compactMap { context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: $0) }
+                .compactMap { try context.existingObject(with:$0) as? DBModel }
+        } catch {
+            return []
+        }
     }
 }
 
