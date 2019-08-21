@@ -12,18 +12,20 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
     private let entityName: String
     
     public init(entityName: String,
-                keyForSort: String,
+                keyForSort: String? = nil,
                 predicate: NSPredicate? = nil,
                 sectionKey: String? = nil) {
         self.entityName = entityName
         let fetchRequest = NSFetchRequest<DBModel>(entityName: entityName)
-        let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
         var sortDescriptors: [NSSortDescriptor] = []
         if let sectionKey = sectionKey {
             let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
             sortDescriptors.append(sectionSortDescriptor)
         }
-        sortDescriptors.append(sortDescriptor)
+        if let keyForSort = keyForSort {
+            let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
+            sortDescriptors.append(sortDescriptor)
+        }
         fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate
         fetchResultController = NSFetchedResultsController<DBModel>(
