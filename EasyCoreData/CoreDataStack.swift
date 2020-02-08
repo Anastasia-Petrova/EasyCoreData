@@ -30,31 +30,6 @@ public class CoreDataStack {
         }
     }
     
-    public func fetchedResultsController<T: NSManagedObject>(
-        entityName: String,
-        keyForSort: String,
-        sectionKey: String? = nil,
-        predicate: NSPredicate? = nil
-        ) -> NSFetchedResultsController<T> {
-        
-        let fetchRequest = NSFetchRequest<T>(entityName: entityName)
-        let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        if let sectionKey = sectionKey {
-            let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
-            fetchRequest.sortDescriptors?.append(sectionSortDescriptor)
-        }
-        fetchRequest.predicate = predicate
-        
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.instance.context, sectionNameKeyPath: sectionKey, cacheName: nil)
-        
-        return fetchedResultsController
-    }
-    // Entity for Name
-    public func entityForName(entityName: String) -> NSEntityDescription {
-        return NSEntityDescription.entity(forEntityName: entityName, in: self.context)!
-    }
-    
     // MARK: - Core Data stack
     
     lazy var applicationDocumentsDirectory: URL = {
