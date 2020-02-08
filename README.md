@@ -1,5 +1,7 @@
 # EasyCoreData
 
+[![CircleCI](https://circleci.com/gh/Anastasia-Petrova/EasyCoreData/tree/master.svg?style=svg)](https://circleci.com/gh/Anastasia-Petrova/EasyCoreData/tree/master)
+
 - Helps you quickly assemble `CoreData` stack
 
 - Provides a generic wrapper around `NSFetchedResultsController`
