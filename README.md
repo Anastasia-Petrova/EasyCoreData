@@ -6,6 +6,18 @@
 
 - Provides a generic wrapper around `NSFetchedResultsController`
 
+### Installation:
+
+**Swift Package Manager**
+
+If you want to use EasyCoreData in any other project that uses SwiftPM, add the package as a dependency in Package.swift:
+
+```
+dependencies: [
+  .package(url: "https://github.com/Anastasia-Petrova/EasyCoreData.git", from: "0.2.0"),
+]
+```
+
 ### Example of Usage:
 
 1. Initialize `CoreDataController` specialized with `PersonManagedObject` and decoded into `PersonViewModel`:
