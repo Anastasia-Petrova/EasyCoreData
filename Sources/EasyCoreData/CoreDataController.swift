@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import UIKit
 
 public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedResultsControllerDelegate
     where ViewModel: CoreDataMappable, ViewModel.CoreDataModel == DBModel  {

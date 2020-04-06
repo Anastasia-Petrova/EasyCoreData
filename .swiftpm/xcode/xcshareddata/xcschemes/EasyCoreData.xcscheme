@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "1130"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,24 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6DF7873422E332A2009482BB"
-               BuildableName = "EasyCoreData.framework"
+               BlueprintIdentifier = "EasyCoreData"
+               BuildableName = "EasyCoreData"
                BlueprintName = "EasyCoreData"
-               ReferencedContainer = "container:EasyCoreData.xcodeproj">
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EasyCoreDataTests"
+               BuildableName = "EasyCoreDataTests"
+               BlueprintName = "EasyCoreDataTests"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,24 +46,13 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6DF7873D22E332A2009482BB"
-               BuildableName = "EasyCoreDataTests.xctest"
+               BlueprintIdentifier = "EasyCoreDataTests"
+               BuildableName = "EasyCoreDataTests"
                BlueprintName = "EasyCoreDataTests"
-               ReferencedContainer = "container:EasyCoreData.xcodeproj">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6DF7873422E332A2009482BB"
-            BuildableName = "EasyCoreData.framework"
-            BlueprintName = "EasyCoreData"
-            ReferencedContainer = "container:EasyCoreData.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -61,17 +64,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6DF7873422E332A2009482BB"
-            BuildableName = "EasyCoreData.framework"
-            BlueprintName = "EasyCoreData"
-            ReferencedContainer = "container:EasyCoreData.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -82,10 +74,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6DF7873422E332A2009482BB"
-            BuildableName = "EasyCoreData.framework"
+            BlueprintIdentifier = "EasyCoreData"
+            BuildableName = "EasyCoreData"
             BlueprintName = "EasyCoreData"
-            ReferencedContainer = "container:EasyCoreData.xcodeproj">
+            ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
